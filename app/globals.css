@@ -299,3 +299,9 @@
 .cesium-map-shell .cesium-viewer-bottom,.cesium-map-shell .cesium-viewer-toolbar{display:none!important}
 .mission-map-wrap>.cesium-map-shell,.fullscreen-map-wrap>.cesium-map-shell{position:absolute!important;inset:0!important;z-index:1!important}
 .fullscreen-map-wrap .cesium-map-shell{width:100%!important;height:100%!important}
+
+
+/* v4.0.1 Google-optional Cesium service states */
+.map-service-note{position:absolute;left:50%;top:56px;transform:translateX(-50%);z-index:780;max-width:min(540px,calc(100% - 28px));padding:8px 12px;border-radius:10px;border:1px solid rgba(245,158,11,.45);background:rgba(20,12,4,.88);color:#fde7a7;font-size:10px;backdrop-filter:blur(8px);pointer-events:none}
+.birth-coords-row{display:grid!important;grid-template-columns:1fr 1fr!important;gap:8px!important}
+@media(max-width:640px){.birth-coords-row{grid-template-columns:1fr!important}}

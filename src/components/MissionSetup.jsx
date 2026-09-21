@@ -3,7 +3,11 @@ import { LocateFixed, Footprints, Car, Play, MapPin } from 'lucide-react';
 import { geocodeWithGoogle } from '../lib/googleMaps';
 
 function parseCoords(text){const m=text.trim().match(/^(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)$/);if(!m)return null;const lat=Number(m[1]),lng=Number(m[2]);if(Math.abs(lat)>90||Math.abs(lng)>180)return null;return{lat,lng,label:`${lat.toFixed(5)}, ${lng.toFixed(5)}`};}
-async function resolvePlace(text){return parseCoords(text)||geocodeWithGoogle(text);}
+async function resolvePlace(text){
+  const coords=parseCoords(text);
+  if(coords)return coords;
+  try{return await geocodeWithGoogle(text)}catch{throw new Error('Address lookup is unavailable. Enter latitude, longitude instead, or restore GOOGLE_MAPS_API_KEY.')}
+}
 function toLocalInput(date){const pad=n=>String(n).padStart(2,'0');return `${date.getFullYear()}-${pad(date.getMonth()+1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;}
 const OFFSETS=Array.from({length:53},(_,i)=>{const minutes=-12*60+i*30;const sign=minutes>=0?'+':'-';const a=Math.abs(minutes);return `${sign}${String(Math.floor(a/60)).padStart(2,'0')}:${String(a%60).padStart(2,'0')}`;});
 
@@ -48,7 +52,8 @@ export default function MissionSetup({initial,gps,gpsError,onStart}){
       <input className="input" type="time" value={profile.birthTime} onChange={e=>setProfile({...profile,birthTime:e.target.value})}/>
       <select className="input" value={profile.birthUtcOffset||''} onChange={e=>setProfile({...profile,birthUtcOffset:e.target.value})}><option value="">Birth UTC offset…</option>{OFFSETS.map(o=><option key={o} value={o}>UTC{o}</option>)}</select>
       <div className="row full"><input className="input" placeholder="Birth city or place" value={profile.birthPlace} onChange={e=>setProfile({...profile,birthPlace:e.target.value})}/><button onClick={()=>lookup('birth')}>{busy==='birth'?'…':'Find'}</button></div>
-    </div><div className="small-note">The UTC offset matters because the natal Ascendant and houses depend on the exact birth time at the birth location.</div></section>
+      <div className="row full birth-coords-row"><input className="input" inputMode="decimal" placeholder="Birth latitude" value={profile.birthLat} onChange={e=>setProfile({...profile,birthLat:e.target.value})}/><input className="input" inputMode="decimal" placeholder="Birth longitude" value={profile.birthLng} onChange={e=>setProfile({...profile,birthLng:e.target.value})}/></div>
+    </div><div className="small-note">The UTC offset matters because the natal Ascendant and houses depend on the exact birth time at the birth location. If Google address lookup is unavailable, enter birth latitude and longitude directly.</div></section>
 
     <section className="card setup-step"><div className="section-title"><b>2</b> Current location</div><div className="row"><input className="input" placeholder="Address, city, landmark, or lat,lng" value={currentText} onChange={e=>{setCurrentText(e.target.value);setOriginSource('manual')}}/><button onClick={()=>lookup('current')}>{busy==='current'?'…':'Set'}</button><button onClick={useGps} title="Use device GPS"><LocateFixed size={16}/></button></div><div className="location-source"><MapPin size={13}/><span>{originSource==='gps'?'Live GPS selected — walking/driving tracking can follow the device.':'Manual origin selected — journey will remain static unless Live GPS is chosen.'}</span></div>{gpsError&&<div className="small-note">GPS: {gpsError}</div>}</section>
 

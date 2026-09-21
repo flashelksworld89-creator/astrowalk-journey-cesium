@@ -1,4 +1,4 @@
-# AstroWalk Journey 4.0.0 — Cesium Globe Rewrite
+# AstroWalk Journey 4.0.1 — Cesium Globe Rewrite
 
 This is a fresh CesiumJS rewrite using AstroWalk 3.6.6 as the feature baseline. It preserves the 3.6.6 transit/natal/prediction/fullscreen forecast experience while replacing the main map renderer with a world-scale Cesium globe.
 
@@ -66,3 +66,6 @@ See `ASTROCARTOGRAPHY_METHOD.md` for the research/implementation model and thres
 
 ### v3.6.6
 Fullscreen predictions are now organized into separate Planet Prediction and House Prediction narrative sections with paragraph-style explanations and expandable astrological basis.
+
+## Google-optional behavior (4.0.1)
+The Cesium globe and core astrology no longer require Google Maps to initialize. `CESIUM_ION_TOKEN` powers Cesium terrain/buildings. `GOOGLE_MAPS_API_KEY` is optional for the main globe, but still required for Google address lookup, Street View, and Google turn-by-turn routing. If Google is unavailable, use GPS or latitude/longitude for birth/current/destination inputs.

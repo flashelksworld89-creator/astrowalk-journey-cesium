@@ -35,7 +35,7 @@ export default function CesiumMissionMap({
 }){
   const hostRef=useRef(null),cesiumRef=useRef(null),viewerRef=useRef(null),handlerRef=useRef(null),entitiesRef=useRef([]),resolvedCityKey=useRef('');
   const streetHostRef=useRef(null),streetRef=useRef(null),googleRef=useRef(null);
-  const [error,setError]=useState(''),[streetVisible,setStreetVisible]=useState(false),[advanced3d,setAdvanced3d]=useState(false);
+  const [error,setError]=useState(''),[streetVisible,setStreetVisible]=useState(false),[streetError,setStreetError]=useState(''),[advanced3d,setAdvanced3d]=useState(false);
   const effectiveCenter=cityCentered&&cityCenter?cityCenter:location;
   const effectiveRadius=cityCentered&&Number.isFinite(Number(cityRadiusMeters))?Number(cityRadiusMeters):Number(radiusMeters)||804.672;
 
@@ -49,14 +49,17 @@ export default function CesiumMissionMap({
       const geocoder=new maps.Geocoder();
       const {results}=await geocoder.geocode({location:{lat:Number(point.lat),lng:Number(point.lng)}});
       const preferred=results?.find(r=>r.types?.includes('locality'))||results?.find(r=>r.types?.includes('postal_town'))||results?.[0];
-      if(!preferred)return;
+      if(!preferred)throw new Error('No reverse-geocode result');
       const comp=preferred.address_components?.find(c=>c.types?.includes('locality'))||preferred.address_components?.find(c=>c.types?.includes('postal_town'));
       const center={lat:preferred.geometry.location.lat(),lng:preferred.geometry.location.lng()};
       let regionRadius=Math.max(Number(radiusMeters)||804.672,804.672);
       const vp=preferred.geometry.viewport;
       if(vp){const ne=vp.getNorthEast(),sw=vp.getSouthWest();const corners=[{lat:ne.lat(),lng:ne.lng()},{lat:ne.lat(),lng:sw.lng()},{lat:sw.lat(),lng:ne.lng()},{lat:sw.lat(),lng:sw.lng()}];regionRadius=Math.max(regionRadius,...corners.map(c=>distanceMeters(center,c)));}
       onCityCenterChange?.({...center,label:comp?.long_name||preferred.formatted_address||'City center',radiusMeters:regionRadius});
-    }catch{}
+    }catch{
+      const fallbackRadius=Math.max(Number(cityRadiusMeters)||Number(radiusMeters)||1609.344,1609.344);
+      onCityCenterChange?.({lat:Number(point.lat),lng:Number(point.lng),label:'Selected area center',radiusMeters:fallbackRadius,approximate:true});
+    }
   };
 
   const publishViewport=()=>{
@@ -145,13 +148,14 @@ export default function CesiumMissionMap({
         const publish=()=>{const pov=pano.getPov?.()||{},heading=Number(pov.heading)||0,links=pano.getLinks?.()||[];const diff=(a,b)=>Math.abs(((norm(a)-norm(b)+540)%360)-180);const best=links.map(l=>({heading:Number(l.heading)})).filter(l=>Number.isFinite(l.heading)).sort((a,b)=>diff(a.heading,heading)-diff(b.heading,heading))[0];onStreetPovChange?.({heading,pitch:Number(pov.pitch)||0,zoom:Number(pov.zoom)||0});if(best)onStreetRoadBearing?.(norm(best.heading));};maps.event.addListener(pano,'pov_changed',publish);maps.event.addListener(pano,'position_changed',publish);maps.event.addListener(pano,'links_changed',publish);maps.event.addListener(pano,'visible_changed',()=>{const visible=pano.getVisible?.()!==false;setStreetVisible(visible);onStreetViewChange?.(visible)});publish();
       }else{streetRef.current.setPosition(streetLocation);streetRef.current.setVisible(true)}
       setStreetVisible(true);onStreetViewChange?.(true);
-    }).catch(()=>{});
+    }).catch(()=>{setStreetError('Google Street View unavailable — check GOOGLE_MAPS_API_KEY.');setStreetVisible(false);onStreetViewChange?.(false)});
     return()=>{cancelled=true};
   },[streetLocation?.lat,streetLocation?.lng,streetLocation?.nonce]);
 
   return <div className="cesium-map-shell">
     <div ref={hostRef} className="cesium-map-canvas"/>
     {error&&<div className="map-error">{error}</div>}
+    {streetError&&!streetVisible&&<div className="map-service-note">{streetError}</div>}
     <div className="cesium-mode-badge">{advanced3d?'CESIUM 3D TERRAIN + BUILDINGS':'CESIUM GLOBE'}</div>
     <div ref={streetHostRef} className={`cesium-street-overlay ${streetVisible?'visible':''}`}/>
     {streetVisible&&<button type="button" className="cesium-street-close" onClick={()=>{streetRef.current?.setVisible(false);setStreetVisible(false);onStreetViewChange?.(false)}}>Back to globe</button>}

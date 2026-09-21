@@ -41,3 +41,12 @@ export async function geocodeWithGoogle(query) {
     label: r.formatted_address || query,
   };
 }
+
+
+export async function tryLoadGoogleMaps() {
+  try {
+    return await loadGoogleMaps();
+  } catch {
+    return null;
+  }
+}
