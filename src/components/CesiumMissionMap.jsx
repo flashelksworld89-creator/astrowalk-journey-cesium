@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import * as Cesium from 'cesium';
 import { loadGoogleMaps } from '../lib/googleMaps';
 import { reverseGeocode } from '../lib/geocode';
 
@@ -98,7 +99,7 @@ export default function CesiumMissionMap({
     (async()=>{
       try{
         globalThis.CESIUM_BASE_URL='/cesium/';
-        const C=await import('cesium');
+        const C=Cesium;
         if(cancelled||!hostRef.current)return;
         cesiumRef.current=C;
         let ionToken='';

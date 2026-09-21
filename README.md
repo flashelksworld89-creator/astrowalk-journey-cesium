@@ -1,4 +1,4 @@
-# AstroWalk Journey 4.2.0 — Route Synthesis + Map Restore
+# AstroWalk Journey 4.2.1 — Route Synthesis + Map Restore
 
 This rebuild restores the Cesium/OpenStreetMap mission map and replaces the simplified prediction layer with a route-centered natal/transit synthesis engine.
 
@@ -36,3 +36,10 @@ npm run dev
 ```
 
 For Vercel, import the repository normally. Start with no environment variables if you want to verify the zero-secret core first.
+
+
+## 4.2.1 deployment hardening
+- Removed the top-level `next/dynamic` boundary around AstroWalkClient.
+- Bundled Cesium through a normal client import instead of a runtime dynamic import.
+- Added a one-time ChunkLoadError recovery guard for stale browser assets after redeploys.
+- Prediction synthesis and restored Cesium/OpenStreetMap map behavior from 4.2.0 are unchanged.
