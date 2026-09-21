@@ -49,3 +49,10 @@ For Vercel, import the repository normally. Start with no environment variables 
 - Keeps AstroWalk as a normal client component.
 - Loads only the Cesium map through a client-only dynamic boundary so Cesium is excluded from Next.js server page-data evaluation.
 - Removes direct browser-global access from AstroWalkClient render; URL admin-mode detection now happens after mount.
+
+
+## 4.2.3 startup repair
+- Removes localStorage access from the initial server-rendered React pass.
+- Restores saved mission data only after browser mount.
+- Guards mission persistence so blocked browser storage cannot crash the app.
+- Keeps the Cesium map boundary and 4.2.0 route prediction synthesis unchanged.

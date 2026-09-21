@@ -8,21 +8,22 @@ import KeywordManager from './components/KeywordManager';
 export default function AstroWalkClient() {
   const [adminMode, setAdminMode] = useState(false);
   const [screen, setScreen] = useState('setup');
-  const [mission, setMission] = useState(() => {
-    try {
-      return JSON.parse(localStorage.getItem('astrowalk_last_mission') || 'null');
-    } catch {
-      return null;
-    }
-  });
+  const [mission, setMission] = useState(null);
   const [gps, setGps] = useState(null);
   const [gpsError, setGpsError] = useState('');
 
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const params = new URLSearchParams(window.location.search);
-      setAdminMode(params.get('admin') === 'keywords');
+    if (typeof window === 'undefined') return;
+
+    const params = new URLSearchParams(window.location.search);
+    setAdminMode(params.get('admin') === 'keywords');
+
+    try {
+      const saved = window.localStorage.getItem('astrowalk_last_mission');
+      setMission(saved ? JSON.parse(saved) : null);
+    } catch {
+      setMission(null);
     }
   }, []);
 
@@ -52,7 +53,9 @@ export default function AstroWalkClient() {
   }, []);
 
   const startMission = data => {
-    localStorage.setItem('astrowalk_last_mission', JSON.stringify(data));
+    try {
+      window.localStorage.setItem('astrowalk_last_mission', JSON.stringify(data));
+    } catch {}
     setMission(data);
     setScreen('mission');
   };
