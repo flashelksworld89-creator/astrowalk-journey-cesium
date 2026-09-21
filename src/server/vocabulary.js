@@ -1,5 +1,5 @@
 // Server-only fallback vocabulary. Your private custom vocabulary should be supplied
-// through the PLANET_VOCAB_JSON Vercel environment variable instead of being
+// through the browser-only private vocabulary vault instead of being
 // committed to the public repository.
 export const FALLBACK_VOCABULARY = {
   sun: {

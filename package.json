@@ -1,12 +1,11 @@
 {
   "name": "astrowalk-journey-next",
   "private": true,
-  "version": "4.0.1",
+  "version": "4.1.0",
   "scripts": {
     "dev": "next dev --webpack",
     "build": "next build --webpack",
     "start": "next start",
-    "vocab:convert": "node scripts/vocab-csv-to-json.mjs",
     "postinstall": "node scripts/copy-cesium.mjs"
   },
   "engines": {

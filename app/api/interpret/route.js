@@ -24,7 +24,7 @@ const ASPECT_EFFECT={
 const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
 function normalizeEntries(v){if(!Array.isArray(v))return[];return v.map(x=>typeof x==='string'?{term:x,weight:.65}:x&&typeof x.term==='string'?{term:x.term.trim(),weight:clamp(Number(x.weight)||.65,0,1)}:null).filter(Boolean)}
 function mergeBank(base={},custom={}){const m={};for(const c of VALID_CATEGORIES){const own=normalizeEntries(custom?.[c]);m[c]=own.length?own:normalizeEntries(base?.[c])}return m}
-function readVocabulary(){let custom={};try{if(process.env.PLANET_VOCAB_JSON)custom=JSON.parse(process.env.PLANET_VOCAB_JSON)}catch{}const out={};for(const k of new Set([...Object.keys(FALLBACK_VOCABULARY),...Object.keys(custom||{})]))out[k]=mergeBank(FALLBACK_VOCABULARY[k],custom?.[k]);return out}
+function readVocabulary(custom={}){const safe=custom&&typeof custom==='object'&&!Array.isArray(custom)?custom:{};const out={};for(const k of new Set([...Object.keys(FALLBACK_VOCABULARY),...Object.keys(safe)]))out[k]=mergeBank(FALLBACK_VOCABULARY[k],safe?.[k]);return out}
 function seedIndex(seed,n){let h=2166136261;for(let i=0;i<seed.length;i++){h^=seed.charCodeAt(i);h=Math.imul(h,16777619)}return n?(h>>>0)%n:0}
 function pick(entries,seed){const list=normalizeEntries(entries).sort((a,b)=>b.weight-a.weight).slice(0,10);return list[seedIndex(seed,list.length)]||null}
 function uniq(arr){return [...new Set(arr.filter(Boolean))]}
@@ -251,7 +251,7 @@ export async function POST(request){
     const body = await request.json();
     const planets=Array.isArray(body.planets)?body.planets:[];
     if(!planets.length)return Response.json({error:'No planetary data supplied'},{status:400});
-    const vocab=readVocabulary();
+    const vocab=readVocabulary(body.customVocabulary);
     const planetPredictions={};for(const p of planets)planetPredictions[p.id]=planetForecast(p,body,vocab);
     const housePredictions={};for(let h=1;h<=12;h++)housePredictions[h]=houseForecast(h,body,vocab);
     const natalUsage={

@@ -18,7 +18,7 @@ export function loadGoogleMaps() {
     };
 
     const script = document.createElement('script');
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(key)}&callback=${cb}&v=weekly&libraries=places`;
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(key)}&callback=${cb}&v=weekly`;
     script.async = true;
     script.defer = true;
     script.onerror = () => reject(new Error('Google Maps could not be loaded.'));
@@ -27,26 +27,4 @@ export function loadGoogleMaps() {
   })();
 
   return loaderPromise;
-}
-
-export async function geocodeWithGoogle(query) {
-  const maps = await loadGoogleMaps();
-  const geocoder = new maps.Geocoder();
-  const { results } = await geocoder.geocode({ address: query });
-  if (!results?.length) throw new Error('Location not found.');
-  const r = results[0];
-  return {
-    lat: r.geometry.location.lat(),
-    lng: r.geometry.location.lng(),
-    label: r.formatted_address || query,
-  };
-}
-
-
-export async function tryLoadGoogleMaps() {
-  try {
-    return await loadGoogleMaps();
-  } catch {
-    return null;
-  }
 }
