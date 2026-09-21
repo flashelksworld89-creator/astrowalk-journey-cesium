@@ -1,0 +1,20 @@
+{
+  "sun": {
+    "people": [{"term":"leader","weight":0.8}],
+    "events": [{"term":"recognition","weight":0.9}],
+    "qualities": [{"term":"confidence","weight":0.8}],
+    "places": [{"term":"public building","weight":0.6}],
+    "objects": [{"term":"light","weight":0.6}]
+  },
+  "moon": {"people":[],"events":[],"qualities":[],"places":[],"objects":[]},
+  "mercury": {"people":[],"events":[],"qualities":[],"places":[],"objects":[]},
+  "venus": {"people":[],"events":[],"qualities":[],"places":[],"objects":[]},
+  "mars": {"people":[],"events":[],"qualities":[],"places":[],"objects":[]},
+  "jupiter": {"people":[],"events":[],"qualities":[],"places":[],"objects":[]},
+  "saturn": {"people":[],"events":[],"qualities":[],"places":[],"objects":[]},
+  "uranus": {"people":[],"events":[],"qualities":[],"places":[],"objects":[]},
+  "neptune": {"people":[],"events":[],"qualities":[],"places":[],"objects":[]},
+  "pluto": {"people":[],"events":[],"qualities":[],"places":[],"objects":[]},
+  "rahu": {"people":[],"events":[],"qualities":[],"places":[],"objects":[]},
+  "ketu": {"people":[],"events":[],"qualities":[],"places":[],"objects":[]}
+}

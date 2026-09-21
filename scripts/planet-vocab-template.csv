@@ -1,0 +1,12 @@
+planet,category,term,weight
+sun,people,leader,0.80
+sun,events,recognition,0.90
+sun,qualities,confidence,0.80
+sun,places,public building,0.60
+sun,objects,light,0.60
+mars,events,machinery activity,0.90
+mars,events,competition,0.80
+mars,objects,tools,0.75
+mars,qualities,urgency,0.85
+venus,events,social contact,0.80
+venus,qualities,harmony,0.85

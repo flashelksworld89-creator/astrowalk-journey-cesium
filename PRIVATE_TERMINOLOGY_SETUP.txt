@@ -1,0 +1,43 @@
+ASTROWALK PRIVATE TERMINOLOGY — QUICK SETUP
+
+EASIEST METHOD: CSV
+
+1. Open scripts/planet-vocab-template.csv.
+2. Add your words or phrases, one per row.
+
+Columns:
+planet,category,term,weight
+
+Example:
+mars,events,machinery activity,0.90
+mars,objects,tools,0.75
+venus,qualities,harmony,0.85
+
+3. Allowed categories:
+people, events, qualities, places, objects
+
+4. Allowed planet keys:
+sun, moon, mercury, venus, mars, jupiter, saturn,
+uranus, neptune, pluto, rahu, ketu
+
+5. Weight is from 0.00 to 1.00. Higher = stronger preference.
+
+6. From the project folder run:
+   npm run vocab:convert
+
+7. Open scripts/planet-vocab-output.json and copy the COMPLETE JSON.
+
+8. In Vercel go to:
+   Project > Settings > Environment Variables
+
+9. Add:
+   Name: PLANET_VOCAB_JSON
+   Value: paste the complete JSON
+
+10. Save and redeploy.
+
+IMPORTANT:
+- Do NOT use VITE_PLANET_VOCAB_JSON.
+- Custom terminology is read by the server endpoint, not bundled into the normal browser app.
+- Keep scripts/planet-vocab-output.json private; it is ignored by Git.
+- The sidereal astronomy remains independent. Your terminology changes interpretation text only.
