@@ -43,3 +43,9 @@ For Vercel, import the repository normally. Start with no environment variables 
 - Bundled Cesium through a normal client import instead of a runtime dynamic import.
 - Added a one-time ChunkLoadError recovery guard for stale browser assets after redeploys.
 - Prediction synthesis and restored Cesium/OpenStreetMap map behavior from 4.2.0 are unchanged.
+
+## 4.2.2 deployment repair
+- Pins Node.js to 24.x for current Vercel and Cesium compatibility.
+- Keeps AstroWalk as a normal client component.
+- Loads only the Cesium map through a client-only dynamic boundary so Cesium is excluded from Next.js server page-data evaluation.
+- Removes direct browser-global access from AstroWalkClient render; URL admin-mode detection now happens after mount.

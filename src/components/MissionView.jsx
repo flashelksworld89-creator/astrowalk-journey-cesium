@@ -1,7 +1,14 @@
+'use client';
+
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { ArrowLeft, Compass, Map, Maximize2, Minimize2, Loader2, Sparkles } from 'lucide-react';
 import ZodiacWheel from './ZodiacWheel';
-import CesiumMissionMap from './CesiumMissionMap';
+import dynamic from 'next/dynamic';
+
+const CesiumMissionMap = dynamic(() => import('./CesiumMissionMap'), {
+  ssr: false,
+  loading: () => <div className="map-engine-status">STARTING MAP…</div>,
+});
 import StreetGameOverlay from './StreetGameOverlay';
 import NakshatraExplorer from './NakshatraExplorer';
 import PlanetStrip from './PlanetStrip';

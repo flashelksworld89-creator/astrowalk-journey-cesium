@@ -6,11 +6,7 @@ import MissionView from './components/MissionView';
 import KeywordManager from './components/KeywordManager';
 
 export default function AstroWalkClient() {
-  const params = new URLSearchParams(window.location.search);
-  if (params.get('admin') === 'keywords') {
-    return <div className="app"><KeywordManager /></div>;
-  }
-
+  const [adminMode, setAdminMode] = useState(false);
   const [screen, setScreen] = useState('setup');
   const [mission, setMission] = useState(() => {
     try {
@@ -21,6 +17,14 @@ export default function AstroWalkClient() {
   });
   const [gps, setGps] = useState(null);
   const [gpsError, setGpsError] = useState('');
+
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      setAdminMode(params.get('admin') === 'keywords');
+    }
+  }, []);
 
   useEffect(() => {
     if (!navigator.geolocation) {
@@ -52,6 +56,10 @@ export default function AstroWalkClient() {
     setMission(data);
     setScreen('mission');
   };
+
+  if (adminMode) {
+    return <div className="app"><KeywordManager /></div>;
+  }
 
   return (
     <div className="app">
