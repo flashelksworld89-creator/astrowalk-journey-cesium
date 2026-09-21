@@ -1,4 +1,4 @@
-const DEFAULT_LORDS=[1,3,7];
+const DEFAULT_LORDS=[1,3,7,9];
 const LABELS={1:'Self',2:'Resources',3:'Communication / local travel',4:'Home',5:'Creativity',6:'Work / service',7:'Others / contracts',8:'Shared matters',9:'Long travel / belief',10:'Career',11:'Networks / gains',12:'Foreign / retreat'};
 
 export default function PredictionFocusSelector({houseLords=[],focusHouses=[],focusLords=[],onChange}){
@@ -9,8 +9,8 @@ export default function PredictionFocusSelector({houseLords=[],focusHouses=[],fo
     onChange?.(type,next);
   };
   return <section className="card prediction-focus-selector">
-    <div className="section-title">Prediction focus <span>DEFAULT 1 · 3 · 7 LORDS</span></div>
-    <p className="small-note">The 1st lord (self), 3rd lord (communication and short-distance travel), and 7th lord (other people, contracts and business relationships) stay emphasized. Add any other houses or lords you want included.</p>
+    <div className="section-title">Prediction focus <span>DEFAULT 1 · 3 · 7 · 9 LORDS</span></div>
+    <p className="small-note">The 1st lord (self), 3rd lord (communication and short-distance travel), 7th lord (other people, contracts and business relationships), and 9th lord (long-distance travel, guidance and broader journey conditions) stay emphasized. Add any other houses or lords you want included.</p>
     <div className="focus-selector-head"><span>House</span><span>House themes</span><span>House</span><span>Lord</span></div>
     <div className="focus-selector-grid">{Array.from({length:12},(_,i)=>i+1).map(h=>{
       const lord=houseLords.find(x=>x.house===h);
